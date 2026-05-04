@@ -3,801 +3,1223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>American Gangster — Analiza Sieci Postaci</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<title>Forrest Gump – Analiza Sieci Postaci</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #121212;
-  --bg-panel: #181818;
-  --bg-card: #202020;
-  --gold: #d4af37;
-  --gold-light: #f3e5ab;
-  --gold-dim: #8b7322;
-  --crimson: #a62b2b;
-  --crimson-light: #d64040;
-  --smoke: #2a2a2a;
-  --smoke-light: #4a4a4a;
-  --accent: #e07b20;
-  --text: #e0e0e0;
-  --text-dim: #999999;
-  --border: #333333;
-  --border-light: #444444;
-  --com0: #d64040;
-  --com1: #d4af37;
-  --com2: #4ba3b5;
-  --com3: #af66cc;
-  --font-d: 'Bebas Neue', sans-serif;
-  --font-b: 'Courier Prime', monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--font-b);
-  display:flex;
-  flex-direction:column;
-}
+  /* ════════════════════════════════════════════
+     TOKENS — paleta z wizualnego świata filmu
+     Niebo Alabamy · pola soi · boks czekoladek
+     skórzana ławka przystankowa · zachód słońca
+  ════════════════════════════════════════════ */
+  :root {
+    /* Kolory dominujące */
+    --sky-blue:    #b8d4e8;   /* niebo alabamy, delikatny błękit */
+    --grass:       #6b9e5e;   /* łąka przed domem Gumpów */
+    --choc-dark:   #3b1f0e;   /* ciemna czekolada — tło */
+    --choc-mid:    #7a3e18;   /* środkowy brąz skóry */
+    --choc-light:  #c4732a;   /* karmel, złocisty brąz */
+    /* Akcent */
+    --feather:     #f5f0e8;   /* pióro unoszące się w powietrzu */
+    --sunset:      #e8955a;   /* ciepły zachód słońca nad Alabamą */
+    --bench-wood:  #d4a96a;   /* drewno ławki na przystanku */
+    /* UI */
+    --bg:          #1a0e06;   /* głębokie tło — kinowa ciemność */
+    --surface:     #2a1508;   /* panel */
+    --surface2:    #341a0a;   /* jaśniejszy panel */
+    --border:      rgba(196,115,42,0.22);
+    --border-warm: rgba(196,115,42,0.45);
+    --text-bright: #f5f0e8;
+    --text-mid:    #d4a96a;
+    --text-dim:    rgba(212,169,106,0.5);
+    --mist:        rgba(196,115,42,0.07);
+    /* Fonty */
+    --font-display: 'Abril Fatface', Georgia, serif;
+    --font-body:    'Crimson Pro', Georgia, serif;
+  }
 
-/* ── HEADER ── */
-header{
-  flex-shrink:0;
-  text-align:center;
-  padding:20px 20px 16px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg-panel);
-  position:relative;
-}
-.h-eyebrow{
-  font-family:var(--font-b);
-  font-size:.6rem;
-  letter-spacing:.5em;
-  color:var(--text-dim);
-  text-transform:uppercase;
-  margin-bottom:6px;
-}
-.h-title{
-  font-family:var(--font-d);
-  font-size:3.2rem;
-  letter-spacing:.15em;
-  line-height:1;
-  color:var(--gold);
-}
-.h-rule{
-  width:180px;height:1px;
-  background:var(--gold-dim);
-  margin:12px auto;
-}
-.h-sub{
-  font-family:var(--font-b);
-  font-size:.65rem;
-  letter-spacing:.25em;
-  color:var(--text-dim);
-  text-transform:uppercase;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── MAIN LAYOUT ── */
-.layout{
-  flex:1;
-  display:grid;
-  grid-template-columns:1fr 340px;
-  min-height:0;
-}
+  html { scroll-behavior: smooth; }
 
-/* ── GRAPH PANEL ── */
-.graph-panel{
-  position:relative;
-  overflow:hidden;
-  background:#0d0d0d;
-  border-right:1px solid var(--border);
-}
-#graph-svg{width:100%;height:100%}
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-bright);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-/* Controls bar */
-.ctrl-bar{
-  position:absolute;
-  top:16px;left:50%;
-  transform:translateX(-50%);
-  display:flex;gap:8px;
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:8px 12px;
-  z-index:10;
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
-}
-.ctrl-label{
-  font-family:var(--font-b);
-  font-size:.6rem;
-  letter-spacing:.2em;
-  color:var(--text-dim);
-  text-transform:uppercase;
-  display:flex;align-items:center;
-  margin-right:8px;
-  padding-right:12px;
-  border-right:1px solid var(--border);
-}
-.ctrl-btn{
-  font-family:var(--font-d);
-  letter-spacing:.1em;
-  font-size:.8rem;
-  padding:6px 16px;
-  border-radius:4px;
-  background:transparent;
-  color:var(--text-dim);
-  border:1px solid transparent;
-  cursor:pointer;
-  transition:all .2s ease;
-}
-.ctrl-btn:hover{color:var(--text);background:var(--smoke)}
-.ctrl-btn.active{
-  background:var(--smoke-light);
-  color:var(--text);
-  border-color:var(--border-light);
-}
+  /* ─── Animowane pióro w tle ─── */
+  @keyframes featherDrift {
+    0%   { transform: translate(-5vw, -10vh) rotate(-15deg); opacity: 0; }
+    8%   { opacity: 0.07; }
+    92%  { opacity: 0.07; }
+    100% { transform: translate(12vw, 108vh) rotate(18deg); opacity: 0; }
+  }
+  .feather-bg {
+    position: fixed;
+    font-size: 3.5rem;
+    pointer-events: none;
+    z-index: 0;
+    animation: featherDrift 22s ease-in-out infinite;
+    filter: blur(0.5px);
+    opacity: 0;
+  }
+  .feather-bg:nth-child(2) { left: 15%; animation-delay: -6s; font-size: 2.2rem; }
+  .feather-bg:nth-child(3) { left: 65%; animation-delay: -14s; font-size: 4rem; }
+  .feather-bg:nth-child(4) { left: 40%; animation-delay: -10s; font-size: 2.8rem; }
 
-/* ── RIGHT PANEL ── */
-.right-panel{
-  background:var(--bg-panel);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
+  /* ─── Gradient tła — panorama Alabamy ─── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    background:
+      /* niebo nad grafem */
+      radial-gradient(ellipse 100% 45% at 50% 0%, rgba(184,212,232,0.06) 0%, transparent 70%),
+      /* ciepło zachodu po prawej */
+      radial-gradient(ellipse 50% 60% at 100% 60%, rgba(232,149,90,0.07) 0%, transparent 65%),
+      /* trawa u dołu */
+      radial-gradient(ellipse 80% 30% at 30% 100%, rgba(107,158,94,0.06) 0%, transparent 70%);
+  }
 
-/* Node card */
-.node-card{
-  flex-shrink:0;
-  min-height:165px;
-  padding:20px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg-card);
-  position:relative;
-}
-.card-empty{
-  display:flex;align-items:center;justify-content:center;
-  height:100%;
-  color:var(--text-dim);
-  font-size:.7rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  text-align:center;
-  line-height:1.6;
-}
-#card-content{display:none}
-.card-community-bar{
-  height:4px;
-  border-radius:2px;
-  margin-bottom:12px;
-}
-.card-name{
-  font-family:var(--font-d);
-  font-size:1.8rem;
-  letter-spacing:.1em;
-  line-height:1.1;
-  margin-bottom:12px;
-}
-.card-metrics{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-.metric-box{
-  background:var(--bg-panel);
-  border:1px solid var(--border);
-  border-radius:4px;
-  padding:8px 10px;
-}
-.metric-box-label{
-  font-size:.6rem;
-  letter-spacing:.15em;
-  color:var(--text-dim);
-  text-transform:uppercase;
-}
-.metric-box-val{
-  font-size:.9rem;
-  color:var(--text);
-  font-weight:700;
-  margin-top:4px;
-}
-.card-neighbors{
-  margin-top:12px;
-  font-size:.65rem;
-  color:var(--text-dim);
-  line-height:1.6;
-}
-.card-neighbors span{color:var(--text);}
+  /* ─── Film grain ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none;
+    opacity: 0.55;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
+  }
 
-/* Legend */
-.legend-wrap{
-  flex-shrink:0;
-  padding:16px 20px;
-  border-bottom:1px solid var(--border);
-}
-.sec-title{
-  font-family:var(--font-d);
-  font-size:.95rem;
-  letter-spacing:.15em;
-  color:var(--text-dim);
-  margin-bottom:12px;
-  text-transform: uppercase;
-}
-.legend-item{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:8px;
-  font-size:.75rem;
-}
-.leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.leg-name{flex:1;color:var(--text)}
-.leg-cnt{color:var(--text-dim);font-size:.65rem}
+  /* ════════════════════════════════════════════
+     HEADER
+  ════════════════════════════════════════════ */
+  header {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-warm);
+    background: linear-gradient(180deg,
+      rgba(26,8,2,0.98) 0%,
+      rgba(42,21,8,0.95) 100%);
+  }
 
-/* Ranking */
-.ranking-wrap{
-  flex:1;
-  display:flex;flex-direction:column;
-  overflow:hidden;
-}
-.rank-head{
-  flex-shrink:0;
-  padding:16px 20px 0;
-}
-.tab-bar{
-  flex-shrink:0;
-  display:flex;
-  border-bottom:1px solid var(--border);
-  margin-top:8px;
-}
-.tab-btn{
-  flex:1;
-  font-family:var(--font-d);
-  font-size:.7rem;
-  letter-spacing:.1em;
-  padding:10px 4px;
-  background:transparent;
-  color:var(--text-dim);
-  border:none;
-  cursor:pointer;
-  transition:all .2s;
-  border-bottom:2px solid transparent;
-}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
-.rank-list{
-  flex:1;
-  overflow-y:auto;
-  padding:8px 12px;
-}
-.rank-list::-webkit-scrollbar{width:6px}
-.rank-list::-webkit-scrollbar-track{background:var(--bg-panel)}
-.rank-list::-webkit-scrollbar-thumb{background:var(--border-light); border-radius: 3px;}
-.rank-item{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 10px;
-  margin-bottom:2px;
-  border-radius:4px;
-  cursor:pointer;
-  transition:background .15s;
-}
-.rank-item:hover{background:var(--smoke)}
-.rank-item.selected{
-  background:var(--smoke-light);
-}
-.ri-num{font-size:.6rem;color:var(--text-dim);width:16px;text-align:right;flex-shrink:0}
-.ri-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.ri-name{font-size:.75rem;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ri-bar-wrap{width:50px;height:4px;background:var(--bg);border-radius:2px;flex-shrink:0; overflow:hidden;}
-.ri-bar{height:100%;border-radius:2px;transition:width .4s}
-.ri-val{font-size:.65rem;color:var(--text-dim);width:32px;text-align:right;flex-shrink:0}
+  /* Kinowa rama nad i pod tytułem */
+  .header-film-strip {
+    height: 10px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--choc-dark) 0px, var(--choc-dark) 14px,
+      var(--choc-light) 14px, var(--choc-light) 16px,
+      var(--choc-dark) 16px, var(--choc-dark) 30px
+    );
+    opacity: 0.6;
+  }
 
-/* ── TOOLTIP ── */
-#tooltip{
-  position:fixed;
-  display:none;
-  background:var(--bg-card);
-  border:1px solid var(--border-light);
-  border-radius:6px;
-  padding:12px 16px;
-  pointer-events:none;
-  z-index:500;
-  max-width:240px;
-  box-shadow:0 8px 24px rgba(0,0,0,.6);
-}
-.tt-name{
-  font-family:var(--font-d);
-  font-size:1.1rem;
-  letter-spacing:.1em;
-  margin-bottom:8px;
-  border-bottom:1px solid var(--border);
-  padding-bottom:6px;
-}
-.tt-row{
-  font-size:.65rem;
-  color:var(--text-dim);
-  margin-bottom:4px;
-  display:flex;justify-content:space-between;gap:16px;
-}
-.tt-val{color:var(--text);font-weight:700}
+  .header-inner {
+    padding: 2rem 2rem 1.8rem;
+    position: relative;
+  }
 
-/* ── INTERPRETATION ── */
-.interp{
-  flex-shrink:0;
-  border-top:1px solid var(--border);
-  padding:24px 40px;
-  background:var(--bg-panel);
-}
-.interp-title{
-  font-family:var(--font-d);
-  font-size:1.4rem;
-  letter-spacing:.15em;
-  color:var(--text-dim);
-  margin-bottom:16px;
-}
-.interp-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:32px;
-}
-.ib h3{
-  font-family:var(--font-d);
-  font-size:.9rem;
-  letter-spacing:.1em;
-  color:var(--text);
-  margin-bottom:8px;
-}
-.ib p{
-  font-size:.7rem;
-  line-height:1.6;
-  color:var(--text-dim);
-}
-.ib strong{color:var(--gold)}
+  /* pióro SVG obok tytułu */
+  .header-feather {
+    display: block;
+    font-size: 2.6rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+    filter: drop-shadow(0 0 18px rgba(245,240,232,0.3));
+    animation: featherBob 4s ease-in-out infinite;
+  }
+  @keyframes featherBob {
+    0%,100% { transform: translateY(0) rotate(-8deg); }
+    50%      { transform: translateY(-6px) rotate(-3deg); }
+  }
 
-/* SVG node/link styles */
-.link{pointer-events:none; stroke-linecap: round;}
-text.lbl{
-  font-family:var(--font-d);
-  letter-spacing:.08em;
-  pointer-events:none;
-  paint-order:stroke fill;
-}
+  header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 4.8rem);
+    color: var(--feather);
+    letter-spacing: 0.01em;
+    line-height: 0.95;
+    text-shadow:
+      0 0 40px rgba(196,115,42,0.4),
+      0 2px 4px rgba(0,0,0,0.8);
+  }
+  header h1 span.year {
+    font-family: var(--font-body);
+    font-size: 0.32em;
+    font-weight: 300;
+    color: var(--bench-wood);
+    vertical-align: super;
+    letter-spacing: 0.15em;
+    margin-left: 0.3em;
+  }
+
+  header p.subtitle {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-top: 0.6rem;
+    font-weight: 300;
+  }
+
+  .header-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin: 0.7rem auto 0;
+    max-width: 480px;
+  }
+  .header-divider::before,
+  .header-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-warm));
+  }
+  .header-divider::after {
+    background: linear-gradient(90deg, var(--border-warm), transparent);
+  }
+  .header-divider span {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* ════════════════════════════════════════════
+     MAIN LAYOUT
+  ════════════════════════════════════════════ */
+  .main-grid {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 310px;
+    gap: 0;
+    height: calc(100vh - 178px);
+    min-height: 580px;
+    border-bottom: 1px solid var(--border-warm);
+  }
+
+  /* ── Graf ── */
+  .graph-area {
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid var(--border-warm);
+    background: radial-gradient(ellipse 80% 80% at 50% 50%,
+      rgba(42,21,8,0.6) 0%,
+      rgba(26,8,2,0.95) 100%);
+  }
+  #graph-svg {
+    width: 100%; height: 100%;
+    cursor: grab;
+  }
+  #graph-svg:active { cursor: grabbing; }
+
+  /* Winieta na grafie */
+  .graph-vignette {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 85% 85% at 50% 50%,
+      transparent 50%,
+      rgba(26,8,2,0.55) 100%);
+    z-index: 1;
+  }
+
+  /* ── Kontrolki ── */
+  .controls {
+    position: absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 3px;
+    background: rgba(42,21,8,0.92);
+    border: 1px solid var(--border-warm);
+    border-radius: 4px;
+    padding: 4px 5px;
+    box-shadow:
+      0 2px 16px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(196,115,42,0.1) inset;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+  }
+  .ctrl-btn {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-mid);
+    transition: all 0.18s;
+    font-weight: 400;
+  }
+  .ctrl-btn:hover { background: rgba(196,115,42,0.12); color: var(--feather); }
+  .ctrl-btn.active {
+    background: var(--choc-light);
+    color: var(--bg);
+    font-weight: 600;
+    box-shadow: 0 1px 6px rgba(196,115,42,0.4);
+  }
+
+  /* ── Podpowiedź zoom ── */
+  .zoom-hint {
+    position: absolute;
+    bottom: 14px; left: 16px;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    font-style: italic;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+    z-index: 2;
+  }
+  .zoom-hint span { color: var(--choc-light); }
+
+  /* ════════════════════════════════════════════
+     PRAWY PANEL
+  ════════════════════════════════════════════ */
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+    position: relative;
+  }
+  /* delikatna drewniana linia na górze */
+  .right-panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent, var(--choc-light), var(--bench-wood), var(--choc-light), transparent);
+    opacity: 0.4;
+  }
+
+  /* ── Karta węzła ── */
+  .node-card {
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--border);
+    min-height: 148px;
+    flex-shrink: 0;
+    background: var(--surface);
+    transition: background 0.3s;
+  }
+  .node-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--feather);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 20px rgba(196,115,42,0.3);
+  }
+  .node-card .community-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 2px 8px 3px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-family: var(--font-body);
+  }
+  .node-card .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+  }
+  .metric-label {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+  .metric-value {
+    font-size: 1rem;
+    color: var(--bench-wood);
+    font-family: var(--font-display);
+    line-height: 1.1;
+  }
+  .node-card.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+  }
+  .node-card.empty p {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.7;
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+  .node-card.empty::before {
+    content: '🪶';
+    display: block;
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 6px;
+    opacity: 0.3;
+    position: absolute;
+  }
+
+  /* ── Legenda społeczności ── */
+  .community-legend {
+    padding: 11px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--surface2);
+  }
+  .community-legend h4 {
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+  .legend-list { display: flex; flex-direction: column; gap: 4px; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.74rem;
+    color: var(--text-mid);
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
+  }
+
+  /* ── Ranking ── */
+  .ranking-area {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+  }
+  .ranking-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--surface2);
+  }
+  .tab-btn {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 3px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.18s;
+    font-weight: 400;
+  }
+  .tab-btn.active {
+    color: var(--bench-wood);
+    border-bottom-color: var(--choc-light);
+    font-weight: 600;
+  }
+  .tab-btn:hover { background: var(--mist); color: var(--text-mid); }
+
+  .ranking-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+  .ranking-list::-webkit-scrollbar { width: 3px; }
+  .ranking-list::-webkit-scrollbar-track { background: transparent; }
+  .ranking-list::-webkit-scrollbar-thumb {
+    background: var(--choc-mid);
+    border-radius: 2px;
+  }
+
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .rank-item:hover { background: var(--mist); }
+  .rank-num {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    width: 18px;
+    text-align: right;
+    flex-shrink: 0;
+    font-style: italic;
+  }
+  .rank-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 4px currentColor;
+  }
+  .rank-name {
+    font-size: 0.76rem;
+    color: var(--text-bright);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+  .rank-bar-wrap {
+    width: 48px; height: 3px;
+    background: rgba(196,115,42,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .rank-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    opacity: 0.85;
+  }
+
+  /* ════════════════════════════════════════════
+     SEKCJA INTERPRETACJI
+  ════════════════════════════════════════════ */
+  .interpretation {
+    position: relative; z-index: 2;
+    padding: 2.6rem 3.5rem 3.5rem;
+    background: var(--surface2);
+    border-top: 1px solid var(--border-warm);
+  }
+  /* pasek filmowy na górze sekcji */
+  .interpretation::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--choc-mid) 20%,
+      var(--sunset) 50%,
+      var(--choc-mid) 80%,
+      transparent 100%);
+    opacity: 0.5;
+  }
+
+  .interpretation h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--feather);
+    margin-bottom: 1.6rem;
+    text-shadow: 0 0 30px rgba(196,115,42,0.25);
+    letter-spacing: 0.01em;
+  }
+  .interp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.8rem 3rem;
+  }
+  .interp-block {
+    border-left: 2px solid rgba(196,115,42,0.3);
+    padding-left: 1rem;
+  }
+  .interp-block h3 {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--sunset);
+    margin-bottom: 0.55rem;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .interp-block p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: rgba(212,169,106,0.8);
+    font-weight: 300;
+  }
+  .interp-block strong {
+    color: var(--bench-wood);
+    font-weight: 600;
+  }
+  .interp-block em { color: var(--sunset); font-style: italic; }
+
+  /* ════════════════════════════════════════════
+     TOOLTIP
+  ════════════════════════════════════════════ */
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(42,21,8,0.97);
+    border: 1px solid var(--border-warm);
+    border-radius: 3px;
+    padding: 10px 14px;
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.7),
+      0 0 0 1px rgba(196,115,42,0.08) inset;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    display: none;
+    z-index: 1000;
+    min-width: 160px;
+    max-width: 220px;
+    backdrop-filter: blur(10px);
+  }
+  #tooltip strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    color: var(--feather);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  #tooltip .tt-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    line-height: 1.65;
+  }
+  #tooltip .tt-label { color: var(--text-dim); font-weight: 300; }
+  #tooltip .tt-val { color: var(--bench-wood); font-weight: 400; }
+
+  /* ── D3 etykiety węzłów ── */
+  .node-label {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 8.5px;
+    fill: rgba(245,240,232,0.75);
+    pointer-events: none;
+    text-anchor: middle;
+    dominant-baseline: central;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+  }
+  .node-label.large {
+    font-size: 10.5px;
+    font-weight: 600;
+    fill: var(--feather);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Stopka ── */
+  footer {
+    position: relative; z-index: 2;
+    text-align: center;
+    padding: 0.9rem;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+  footer p {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    font-family: var(--font-body);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+  }
 </style>
 </head>
 <body>
 
+<!-- Animowane pióra w tle -->
+<div class="feather-bg" style="left:8%">🪶</div>
+<div class="feather-bg" style="left:22%">🪶</div>
+<div class="feather-bg" style="left:72%">🪶</div>
+<div class="feather-bg" style="left:55%">🪶</div>
+
+<!-- HEADER -->
 <header>
-  <div class="h-eyebrow">Ridley Scott &bull; 2007 &bull; Social Network Analysis</div>
-  <div class="h-title">AMERICAN GANGSTER</div>
-  <div class="h-rule"></div>
-  <div class="h-sub">Analiza Sieci Postaci &mdash; Graf Współwystępowania w Scenach</div>
+  <div class="header-film-strip"></div>
+  <div class="header-inner">
+    <span class="header-feather">🪶</span>
+    <h1>Forrest Gump<span class="year">1994</span></h1>
+    <p class="subtitle">Analiza Sieci Postaci &nbsp;·&nbsp; Social Network Analysis</p>
+    <div class="header-divider">
+      <span>"Life is like a box of chocolates — you never know what you're gonna get."</span>
+    </div>
+  </div>
+  <div class="header-film-strip"></div>
 </header>
 
-<div class="layout">
-  <div class="graph-panel" id="graph-panel">
-    <div class="ctrl-bar">
-      <div class="ctrl-label">Tryb:</div>
-      <button class="ctrl-btn active" data-metric="degree">Stopień</button>
-      <button class="ctrl-btn" data-metric="betweenness">Pośrednictwo</button>
-      <button class="ctrl-btn" data-metric="closeness">Bliskość</button>
-      <button class="ctrl-btn" data-metric="pagerank">PageRank</button>
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- GRAPH -->
+  <div class="graph-area">
+    <div class="controls">
+      <button class="ctrl-btn active" data-mode="degree">Stopień</button>
+      <button class="ctrl-btn" data-mode="betweenness">Pośrednictwo</button>
+      <button class="ctrl-btn" data-mode="closeness">Bliskość</button>
+      <button class="ctrl-btn" data-mode="pagerank">PageRank</button>
     </div>
     <svg id="graph-svg"></svg>
+    <div class="graph-vignette"></div>
+    <div class="zoom-hint"><span>scroll</span> zoom &nbsp;·&nbsp; <span>drag</span> pan &nbsp;·&nbsp; <span>klik węzeł</span> szczegóły</div>
   </div>
 
+  <!-- RIGHT PANEL -->
   <div class="right-panel">
-    <div class="node-card" id="node-card">
-      <div class="card-empty" id="card-empty">← Kliknij postać<br>aby zobaczyć szczegóły</div>
-      <div id="card-content">
-        <div class="card-community-bar" id="card-bar"></div>
-        <div class="card-name" id="card-name"></div>
-        <div class="card-metrics" id="card-metrics"></div>
-        <div class="card-neighbors" id="card-neighbors"></div>
-      </div>
+
+    <!-- NODE CARD -->
+    <div class="node-card empty" id="node-card">
+      <p>Kliknij postać<br>aby zobaczyć szczegóły</p>
     </div>
 
-    <div class="legend-wrap">
-      <div class="sec-title">Społeczności</div>
-      <div id="legend-items"></div>
+    <!-- COMMUNITY LEGEND -->
+    <div class="community-legend">
+      <h4>Społeczności (Louvain)</h4>
+      <div class="legend-list" id="legend-list"></div>
     </div>
 
-    <div class="ranking-wrap">
-      <div class="rank-head">
-        <div class="sec-title" style="margin-bottom:0">Ranking Centralności</div>
+    <!-- RANKING -->
+    <div class="ranking-area">
+      <div class="ranking-tabs" id="ranking-tabs">
+        <button class="tab-btn active" data-rank="degree">Stopień</button>
+        <button class="tab-btn" data-rank="betweenness">Pośredn.</button>
+        <button class="tab-btn" data-rank="closeness">Bliskość</button>
+        <button class="tab-btn" data-rank="pagerank">PR</button>
       </div>
-      <div class="tab-bar">
-        <button class="tab-btn active" data-tab="degree">Stopień</button>
-        <button class="tab-btn" data-tab="betweenness">Pośrednictwo</button>
-        <button class="tab-btn" data-tab="closeness">Bliskość</button>
-        <button class="tab-btn" data-tab="pagerank">PageRank</button>
-      </div>
-      <div class="rank-list" id="rank-list"></div>
+      <div class="ranking-list" id="ranking-list"></div>
     </div>
+
   </div>
 </div>
 
-<div class="interp">
-  <div class="interp-title">Interpretacja Struktury Sieci</div>
+<!-- INTERPRETATION -->
+<div class="interpretation">
+  <h2>Interpretacja sieci — kto naprawdę steruje opowieścią?</h2>
   <div class="interp-grid">
-    <div class="ib">
-      <h3>Dwie Dominanty</h3>
-      <p><strong>Richie Roberts</strong> (betweenness 0.508) i <strong>Frank Lucas</strong> (0.487) to dwa bieguny narracyjne — detektyw i gangster. Obaj pełnią rolę <strong>mostów informacyjnych</strong> między odrębnymi klastrami. Krawędź Richie–Frank (waga 5) to serce fabuły.</p>
+    <div class="interp-block">
+      <h3>Centralność: Forrest</h3>
+      <p><strong>Forrest</strong> dominuje każdą miarą centralności — posiada najwyższy stopień węzła, betweenness oraz PageRank w całej sieci. Stanowi niemal jedyny most łączący izolowane kliki (wojsko, ruch hipisowski, środowisko sportowe). Bez niego sieć rozpadłaby się na kilkanaście rozłącznych komponentów.</p>
     </div>
-    <div class="ib">
-      <h3>Klastry Społeczności</h3>
-      <p>Algorytm modularności wykrył <strong>4 wspólnoty</strong>. Czerwona to skorumpowane SIU. Złota to imperium Franka — rodzina, dostawcy, drobnicy. Błękitna — neutralni, media. Purpurowa — prokuratura Spearmana.</p>
+    <div class="interp-block">
+      <h3>Triada: Forrest–Jenny–Lt. Dan</h3>
+      <p>Krawędź <strong>Forrest–Jenny</strong> (waga 26) to najsilniejsze połączenie w sieci — oś emocjonalna całego filmu. <strong>Lt. Dan</strong> (waga 17) i <strong>Mrs. Gump</strong> (waga 15) tworzą kolejną warstwę. Trójka tworzy gęste jądro wokół którego orbitują słabiej powiązane postacie historyczne i epizodyczne.</p>
     </div>
-    <div class="ib">
-      <h3>Kluczowe Krawędzie</h3>
-      <p>Najsilniejsza krawędź to <strong>Richie–Toback</strong> (waga 12). <strong>Frank–Teddy</strong> (10) i <strong>Frank–Ana</strong> (9) wskazują, że imperium opiera się mocno na więzach rodzinnych, nie czysto biznesowych.</p>
+    <div class="interp-block">
+      <h3>Społeczności i epoki</h3>
+      <p>Detekcja społeczności Louvaina ujawnia sześć klastrów odpowiadających historycznym etapom: Alabama–dzieciństwo, ruch kontrkulturowy Jenny, oddział wietnamski Bubby i Lt. Dana, krąg mediów i mediatorów, dzieci Forresta Jr. oraz peryferyjne postacie publiczne (Elvis, Nixon, Kennedy).</p>
+    </div>
+    <div class="interp-block">
+      <h3>Gwiazdy historii jako mosty</h3>
+      <p>Postacie takie jak <strong>Elvis Presley</strong>, <strong>John Lennon</strong> czy <strong>President Kennedy</strong> mają zaskakująco niską wartość betweenness mimo znaczenia kulturowego — w narracyjnej sieci Forresta odgrywają role <em>ozdobników</em>, a nie prawdziwych pośredników. To cecha charakterystyczna kroniki historii widzianej oczyma nieświadomego uczestnika.</p>
     </div>
   </div>
 </div>
 
-<div id="tooltip">
-  <div class="tt-name" id="tt-name"></div>
-  <div id="tt-rows"></div>
-</div>
+<footer>
+  <p>🪶 &nbsp; Forrest Gump (1994) · Social Network Analysis · D3.js v7 · Louvain Community Detection</p>
+</footer>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<!-- TOOLTIP -->
+<div id="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
-/* =====================================================================
-   DATA
-   ===================================================================== */
-const RAW_NODES = [
-  {id:"RICHIE",     community:0, betweenness:0.5085, rawSize:40},
-  {id:"TOBACK",     community:0, betweenness:0.0485, rawSize:20.24},
-  {id:"FRANK",      community:1, betweenness:0.4870, rawSize:37.07},
-  {id:"TEDDY",      community:2, betweenness:0.0350, rawSize:16.59},
-  {id:"ANA",        community:1, betweenness:0.0049, rawSize:15.12},
-  {id:"SPEARMAN",   community:3, betweenness:0.0517, rawSize:18.05},
-  {id:"RIVERA",     community:0, betweenness:0.0002, rawSize:11.46},
-  {id:"CHARLIE",    community:2, betweenness:0.0147, rawSize:18.05},
-  {id:"TOSCA",      community:2, betweenness:0.0143, rawSize:18.05},
-  {id:"DOC",        community:1, betweenness:0,      rawSize:10.73},
-  {id:"JONES",      community:3, betweenness:0,      rawSize:12.93},
-  {id:"TRUPO",      community:0, betweenness:0.0227, rawSize:16.59},
-  {id:"TANGO",      community:2, betweenness:0,      rawSize:14.39},
-  {id:"MRS. LUCAS", community:1, betweenness:0.0004, rawSize:12.20},
-  {id:"NATE",       community:1, betweenness:0.0005, rawSize:12.20},
-  {id:"SHEILA",     community:0, betweenness:0.0002, rawSize:11.46},
-  {id:"REPORTER ON TV", community:2, betweenness:0.0113, rawSize:18.05},
-  {id:"BANKER",     community:2, betweenness:0.0071, rawSize:17.32},
-  {id:"ABRUZZO",    community:3, betweenness:0,      rawSize:12.93},
-  {id:"BAILIFF",    community:0, betweenness:0.0002, rawSize:11.46},
-  {id:"JIMMY",      community:3, betweenness:0.0517, rawSize:18.05},
-  {id:"LAURIE",     community:0, betweenness:0,      rawSize:10.73},
-  {id:"TONY",       community:0, betweenness:0,      rawSize:11.46},
-  {id:"GENERAL",    community:1, betweenness:0,      rawSize:11.46},
-  {id:"SIBOTA",     community:2, betweenness:0,      rawSize:13.66},
-  {id:"DETECTIVE",  community:2, betweenness:0.0152, rawSize:16.59},
-  {id:"PROFESSOR",  community:2, betweenness:0,      rawSize:14.39},
-  {id:"KA 760 -",   community:3, betweenness:0,      rawSize:12.93},
-  {id:"CONTINUED:", community:1, betweenness:0.0054, rawSize:13.66},
-  {id:"MRS. TOSCA", community:1, betweenness:0,      rawSize:11.46},
-  {id:"ARMY CAPTAIN",community:0,betweenness:0,      rawSize:10},
-  {id:"COLONEL",    community:1, betweenness:0,      rawSize:11.46},
-  {id:"CLERK",      community:0, betweenness:0,      rawSize:10.73},
-  {id:"CHEMIST",    community:1, betweenness:0,      rawSize:10},
-  {id:"SINGER",     community:1, betweenness:0,      rawSize:10.73},
-  {id:"CAMPIZI",    community:0, betweenness:0,      rawSize:10},
-  {id:"CHARLENE",   community:1, betweenness:0,      rawSize:10},
-  {id:"BUMPY",      community:1, betweenness:0,      rawSize:10},
-  {id:"GANGSTA 2",  community:1, betweenness:0,      rawSize:11.46},
-  {id:"FBI AGENT",  community:0, betweenness:0,      rawSize:12.20},
-  {id:"MAN",        community:0, betweenness:0,      rawSize:12.20},
-  {id:"DISPATCHER", community:0, betweenness:0,      rawSize:10.73},
-  {id:"GANGSTA 1",  community:1, betweenness:0,      rawSize:11.46},
-  {id:"ROSSI",      community:1, betweenness:0,      rawSize:10},
-  {id:"REDTOP",     community:1, betweenness:0,      rawSize:10},
-  {id:"RED TOP",    community:1, betweenness:0,      rawSize:11.46},
-  {id:"JACKIE",     community:1, betweenness:0,      rawSize:10},
-  {id:"JOE LOUIS",  community:1, betweenness:0,      rawSize:11.46},
-  {id:"STEVIE",     community:2, betweenness:0,      rawSize:10.73},
-  {id:"THAI",       community:1, betweenness:0,      rawSize:10.73},
-  {id:"SERVICEMAN 1",community:1,betweenness:0,      rawSize:11.46},
-  {id:"SERVICEMAN 2",community:1,betweenness:0,      rawSize:11.46},
-  {id:"TURNER",     community:1, betweenness:0,      rawSize:10},
-  {id:"DARYLYNN",   community:3, betweenness:0,      rawSize:10},
-  {id:"MEDICAL EXAMINER",community:2,betweenness:0,  rawSize:12.20},
-  {id:"REPORTER",   community:2, betweenness:0,      rawSize:12.20},
-  {id:"JUDGE",      community:0, betweenness:0,      rawSize:10},
-  {id:"GUY WITH GUN",community:3,betweenness:0,      rawSize:10},
-  {id:"KA 760.",    community:2, betweenness:0,      rawSize:10},
-  {id:"PARAMEDIC",  community:0, betweenness:0,      rawSize:10},
-  {id:"MECHANIC",   community:0, betweenness:0,      rawSize:10},
-  {id:"SPEARMAN V/O PHONE",community:0,betweenness:0,rawSize:10.73},
-  {id:"SIU DET. 2", community:0, betweenness:0,      rawSize:12.93},
-  {id:"SIU DET. 1", community:0, betweenness:0,      rawSize:12.93},
-  {id:"SIU DET 1",  community:0, betweenness:0,      rawSize:12.93},
-  {id:"TAXI DRIVER",community:0, betweenness:0,      rawSize:10},
-  {id:"US ATTORNEY",community:0, betweenness:0,      rawSize:10.73},
-  {id:"VIDA",       community:0, betweenness:0,      rawSize:11.46}
+// ══════════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════════
+const rawNodes = [
+  {id:"FORREST",mod:0,bc:0.7457,label:"FORREST"},
+  {id:"JENNY",mod:1,bc:0.1440,label:"JENNY"},
+  {id:"LT. DAN",mod:2,bc:0.0687,label:"LT. DAN"},
+  {id:"MRS. GUMP",mod:0,bc:0.0083,label:"MRS. GUMP"},
+  {id:"BUBBA",mod:2,bc:0.0081,label:"BUBBA"},
+  {id:"CROWD",mod:1,bc:0.0079,label:"CROWD"},
+  {id:"SGT. SIMS",mod:2,bc:0.0016,label:"SGT. SIMS"},
+  {id:"SONG",mod:2,bc:0.0070,label:"SONG"},
+  {id:"ELDERLY WOMAN",mod:0,bc:0,label:"ELDERLY WOMAN"},
+  {id:"LOUISE",mod:3,bc:0.0085,label:"LOUISE"},
+  {id:"FOOTBALL COACH",mod:3,bc:0.0006,label:"FOOTBALL COACH"},
+  {id:"PRINCIPAL",mod:0,bc:0,label:"PRINCIPAL"},
+  {id:"ANNOUNCER",mod:1,bc:0.0086,label:"ANNOUNCER"},
+  {id:"FORREST JR.",mod:4,bc:0.0015,label:"FORREST JR."},
+  {id:"ANCHORMAN",mod:0,bc:0.0061,label:"ANCHORMAN"},
+  {id:"NEWSCASTER",mod:3,bc:0.0060,label:"NEWSCASTER"},
+  {id:"YOUNG MAN",mod:3,bc:0.0002,label:"YOUNG MAN"},
+  {id:"LENORE",mod:0,bc:0,label:"LENORE"},
+  {id:"PRESIDENT NIXON",mod:0,bc:0,label:"PRESIDENT NIXON"},
+  {id:"DICK CLARK",mod:0,bc:0.0074,label:"DICK CLARK"},
+  {id:"NEWSMAN",mod:3,bc:0.0221,label:"NEWSMAN"},
+  {id:"MRS. BLUE",mod:0,bc:0,label:"MRS. BLUE"},
+  {id:"CARLA",mod:0,bc:0,label:"CARLA"},
+  {id:"OLD SHRIMPER",mod:0,bc:0,label:"OLD SHRIMPER"},
+  {id:"BUS STOP - PRESENT - DAY",mod:0,bc:0.0002,label:"BUS STOP"},
+  {id:"SOLDIER",mod:2,bc:0.0030,label:"SOLDIER"},
+  {id:"DOCTOR",mod:0,bc:0,label:"DOCTOR"},
+  {id:"OFFICER",mod:0,bc:0,label:"OFFICER"},
+  {id:"ELVIS",mod:0,bc:0,label:"ELVIS"},
+  {id:"BLACK WOMAN",mod:1,bc:0,label:"BLACK WOMAN"},
+  {id:"GIRL",mod:1,bc:0,label:"GIRL"},
+  {id:"MAN",mod:2,bc:0.0202,label:"MAN"},
+  {id:"WESLEY",mod:5,bc:0,label:"WESLEY"},
+  {id:"ISABEL",mod:1,bc:0.0026,label:"ISABEL"},
+  {id:"VET",mod:1,bc:0.0026,label:"VET"},
+  {id:"RUBEN",mod:5,bc:0.0048,label:"RUBEN"},
+  {id:"S.D.S.",mod:5,bc:0.0048,label:"S.D.S."},
+  {id:"POLICEMAN",mod:1,bc:0.0026,label:"POLICEMAN"},
+  {id:"BLACK PANTHER",mod:5,bc:0.0048,label:"BLACK PANTHER"},
+  {id:"MASAI",mod:5,bc:0.0048,label:"MASAI"},
+  {id:"PRESIDENT JOHNSON",mod:0,bc:0.0035,label:"PRES. JOHNSON"},
+  {id:"NURSE",mod:0,bc:0,label:"NURSE"},
+  {id:"STRONGARM",mod:2,bc:0.0107,label:"STRONGARM"},
+  {id:"SOLDIER WITH BIG MACHINE GUN",mod:2,bc:0.0107,label:"SOLDIER W/ GUN"},
+  {id:"MALE NURSE",mod:2,bc:0.0107,label:"MALE NURSE"},
+  {id:"HILARY",mod:1,bc:0.0026,label:"HILARY"},
+  {id:"ABBIE HOFFMAN",mod:1,bc:0.0026,label:"ABBIE HOFFMAN"},
+  {id:"MINISTER",mod:3,bc:0.0052,label:"MINISTER"},
+  {id:"SUSAN",mod:3,bc:0.0052,label:"SUSAN"},
+  {id:"LITTLE BOY",mod:4,bc:0.0031,label:"LITTLE BOY"},
+  {id:"LYNN MARIE",mod:4,bc:0.0031,label:"LYNN MARIE"},
+  {id:"SCHOOLD BUS DRIVER",mod:4,bc:0.0020,label:"BUS DRIVER"},
+  {id:"BERT",mod:4,bc:0.0031,label:"BERT"},
+  {id:"WILD-EYED MAN",mod:0,bc:0,label:"WILD-EYED MAN"},
+  {id:"AGING HIPPIE",mod:0,bc:0,label:"AGING HIPPIE"},
+  {id:"REPORTER",mod:3,bc:0.0077,label:"REPORTER"},
+  {id:"ERNIE",mod:4,bc:0.0031,label:"ERNIE"},
+  {id:"MAN WITH CANE",mod:0,bc:0.0083,label:"MAN W/ CANE"},
+  {id:"ELVIS PRESLEY",mod:0,bc:0.0083,label:"ELVIS PRESLEY"},
+  {id:"BUS DRIVER",mod:0,bc:0.0020,label:"BUS DRIVER 2"},
+  {id:"BOB HOPE",mod:0,bc:0.0009,label:"BOB HOPE"},
+  {id:"JOHN LENNON",mod:0,bc:0.0047,label:"JOHN LENNON"},
+  {id:"DICK CAVETT",mod:0,bc:0.0047,label:"DICK CAVETT"},
+  {id:"NEIL ARMSTRONG",mod:0,bc:0.0047,label:"N. ARMSTRONG"},
+  {id:"YOUNG HIPPIE",mod:1,bc:0.0011,label:"YOUNG HIPPIE"},
+  {id:"CAB DRIVER",mod:1,bc:0,label:"CAB DRIVER"},
+  {id:"REVEREND",mod:0,bc:0,label:"REVEREND"},
+  {id:"MARGO",mod:0,bc:0,label:"MARGO"},
+  {id:"FORREST'S BOAT - DAY",mod:0,bc:0.0056,label:"FORREST'S BOAT"},
+  {id:"SECURITY GUARD",mod:0,bc:0,label:"SECURITY GUARD"},
+  {id:"PRESENT - BUS STOP",mod:0,bc:0.0035,label:"PRESENT BUS STOP"},
+  {id:"PATRONS",mod:1,bc:0.0011,label:"PATRONS"},
+  {id:"DEAN",mod:0,bc:0.0020,label:"DEAN"},
+  {id:"PRESIDENT KENNEDY",mod:0,bc:0,label:"PRES. KENNEDY"},
+  {id:"BLACK AND WHITE PARAMOUNT NEWSREEL - DAY",mod:1,bc:0.0044,label:"B&W NEWSREEL"},
+  {id:"BLACK AND WHITE NEWSREEL",mod:1,bc:0.0044,label:"B&W NEWSREEL 2"},
+  {id:"DJ",mod:1,bc:0.0011,label:"DJ"},
+  {id:"WHITE WOMAN",mod:1,bc:0.0044,label:"WHITE WOMAN"},
+  {id:"BILLY",mod:1,bc:0.0026,label:"BILLY"},
+  {id:"DRIVER",mod:1,bc:0.0011,label:"DRIVER"},
+  {id:"MEN",mod:1,bc:0.0026,label:"MEN"},
+  {id:"EMCEE",mod:1,bc:0.0026,label:"EMCEE"},
+  {id:"SIMS.",mod:2,bc:0.0051,label:"SIMS."},
+  {id:"BUBBA AND FORREST",mod:2,bc:0.0051,label:"BUBBA & FORREST"},
+  {id:"BUBBA & FORREST",mod:2,bc:0.0051,label:"BUBBA & FORREST 2"},
+  // extra from edges
+  {id:"DALLAS",mod:0,bc:0.0005,label:"DALLAS"},
+  {id:"CLEVELAND",mod:0,bc:0.0005,label:"CLEVELAND"},
+  {id:"MILITARY RECRUITER",mod:0,bc:0.0006,label:"MIL. RECRUITER"},
+  {id:"NIGHT",mod:2,bc:0.0010,label:"NIGHT"},
+  {id:"ANOTHER DAY",mod:2,bc:0.0010,label:"ANOTHER DAY"},
+  {id:"FORREST & RECRUITS",mod:2,bc:0.0010,label:"F & RECRUITS"},
+  {id:"YOUNG PRIVATE",mod:2,bc:0.0010,label:"YOUNG PRIVATE"},
+  {id:"CHET HUNTLEY",mod:0,bc:0.0005,label:"CHET HUNTLEY"},
+  {id:"ASSISTANT COACH",mod:0,bc:0.0005,label:"ASST COACH"},
+  {id:"GOVERNOR WALLACE",mod:0,bc:0.0005,label:"GOV. WALLACE"},
+  {id:"BLACK AND WHITE FOOTAGE",mod:1,bc:0.0005,label:"B&W FOOTAGE"},
+  {id:"EARL",mod:0,bc:0.0005,label:"EARL"},
+  {id:"KATZENBACH",mod:0,bc:0.0005,label:"KATZENBACH"},
+  {id:"HIGH SCHOOL COACH",mod:3,bc:0.0005,label:"HS COACH"},
+  {id:"OLDER BOY",mod:3,bc:0.0005,label:"OLDER BOY"},
+  {id:"BUS STATION - DAY",mod:0,bc:0.0005,label:"BUS STATION"},
 ];
 
-const RAW_EDGES = [
-  {s:"RICHIE",t:"TOBACK",w:12},{s:"RICHIE",t:"SPEARMAN",w:7},{s:"RICHIE",t:"RIVERA",w:6},
-  {s:"RICHIE",t:"FRANK",w:5},{s:"RICHIE",t:"JONES",w:4},{s:"RICHIE",t:"TOSCA",w:3},
-  {s:"RICHIE",t:"SHEILA",w:3},{s:"RICHIE",t:"REPORTER ON TV",w:3},{s:"RICHIE",t:"BAILIFF",w:2},
-  {s:"RICHIE",t:"ABRUZZO",w:2},{s:"RICHIE",t:"JIMMY",w:2},{s:"RICHIE",t:"LAURIE",w:2},
-  {s:"RICHIE",t:"TRUPO",w:2},{s:"RICHIE",t:"TONY",w:2},{s:"RICHIE",t:"BANKER",w:1},
-  {s:"RICHIE",t:"ARMY CAPTAIN",w:1},{s:"RICHIE",t:"CONTINUED:",w:1},{s:"RICHIE",t:"CLERK",w:1},
-  {s:"RICHIE",t:"CHARLIE",w:1},{s:"RICHIE",t:"CAMPIZI",w:1},{s:"RICHIE",t:"FBI AGENT",w:1},
-  {s:"RICHIE",t:"GANGSTA 2",w:1},{s:"RICHIE",t:"GANGSTA 1",w:1},{s:"RICHIE",t:"DETECTIVE",w:1},
-  {s:"RICHIE",t:"DISPATCHER",w:1},{s:"RICHIE",t:"KA 760 -",w:1},{s:"RICHIE",t:"JUDGE",w:1},
-  {s:"RICHIE",t:"JOE LOUIS",w:1},{s:"RICHIE",t:"MEDICAL EXAMINER",w:1},{s:"RICHIE",t:"MAN",w:1},
-  {s:"RICHIE",t:"PROFESSOR",w:1},{s:"RICHIE",t:"PARAMEDIC",w:1},{s:"RICHIE",t:"REPORTER",w:1},
-  {s:"RICHIE",t:"MECHANIC",w:1},{s:"RICHIE",t:"SPEARMAN V/O PHONE",w:1},
-  {s:"RICHIE",t:"SIU DET. 2",w:1},{s:"RICHIE",t:"SIU DET. 1",w:1},{s:"RICHIE",t:"SIU DET 1",w:1},
-  {s:"RICHIE",t:"TANGO",w:1},{s:"RICHIE",t:"TAXI DRIVER",w:1},{s:"RICHIE",t:"US ATTORNEY",w:1},
-  {s:"RICHIE",t:"VIDA",w:1},
-  {s:"TOBACK",t:"CONTINUED:",w:1},{s:"TOBACK",t:"FRANK",w:1},{s:"TOBACK",t:"FBI AGENT",w:1},
-  {s:"TOBACK",t:"MRS. LUCAS",w:1},{s:"TOBACK",t:"REPORTER ON TV",w:1},{s:"TOBACK",t:"MAN",w:1},
-  {s:"TOBACK",t:"SIU DET 1",w:1},{s:"TOBACK",t:"SIU DET. 1",w:1},{s:"TOBACK",t:"SIU DET. 2",w:1},
-  {s:"TOBACK",t:"SPEARMAN",w:1},{s:"TOBACK",t:"TONY",w:1},{s:"TOBACK",t:"TRUPO",w:1},
-  {s:"TOBACK",t:"US ATTORNEY",w:1},{s:"TOBACK",t:"VIDA",w:1},
-  {s:"FRANK",t:"TEDDY",w:10},{s:"FRANK",t:"ANA",w:9},{s:"FRANK",t:"CHARLIE",w:5},
-  {s:"FRANK",t:"TOSCA",w:5},{s:"FRANK",t:"DOC",w:4},{s:"FRANK",t:"TRUPO",w:3},
-  {s:"FRANK",t:"TANGO",w:3},{s:"FRANK",t:"MRS. LUCAS",w:3},{s:"FRANK",t:"NATE",w:3},
-  {s:"FRANK",t:"BANKER",w:2},{s:"FRANK",t:"JIMMY",w:2},{s:"FRANK",t:"GENERAL",w:2},
-  {s:"FRANK",t:"CONTINUED:",w:1},{s:"FRANK",t:"COLONEL",w:1},{s:"FRANK",t:"CHEMIST",w:1},
-  {s:"FRANK",t:"CHARLENE",w:1},{s:"FRANK",t:"BUMPY",w:1},{s:"FRANK",t:"GANGSTA 2",w:1},
-  {s:"FRANK",t:"GANGSTA 1",w:1},{s:"FRANK",t:"DETECTIVE",w:1},{s:"FRANK",t:"ROSSI",w:1},
-  {s:"FRANK",t:"REPORTER ON TV",w:1},{s:"FRANK",t:"REDTOP",w:1},{s:"FRANK",t:"RED TOP",w:1},
-  {s:"FRANK",t:"MRS. TOSCA",w:1},{s:"FRANK",t:"PROFESSOR",w:1},{s:"FRANK",t:"JACKIE",w:1},
-  {s:"FRANK",t:"JOE LOUIS",w:1},{s:"FRANK",t:"SPEARMAN",w:1},{s:"FRANK",t:"STEVIE",w:1},
-  {s:"FRANK",t:"THAI",w:1},{s:"FRANK",t:"SINGER",w:1},{s:"FRANK",t:"SIBOTA",w:1},
-  {s:"FRANK",t:"SERVICEMAN 1",w:1},{s:"FRANK",t:"SERVICEMAN 2",w:1},{s:"FRANK",t:"TURNER",w:1},
-  {s:"TEDDY",t:"JIMMY",w:2},{s:"TEDDY",t:"BANKER",w:1},{s:"TEDDY",t:"ANA",w:1},
-  {s:"TEDDY",t:"CHARLIE",w:1},{s:"TEDDY",t:"DETECTIVE",w:1},{s:"TEDDY",t:"KA 760.",w:1},
-  {s:"TEDDY",t:"SIBOTA",w:1},{s:"TEDDY",t:"STEVIE",w:1},{s:"TEDDY",t:"TRUPO",w:1},
-  {s:"ANA",t:"MRS. LUCAS",w:1},{s:"ANA",t:"CONTINUED:",w:1},{s:"ANA",t:"TOSCA",w:1},
-  {s:"ANA",t:"MRS. TOSCA",w:1},{s:"ANA",t:"TRUPO",w:1},{s:"ANA",t:"DOC",w:1},
-  {s:"SPEARMAN",t:"ABRUZZO",w:2},{s:"SPEARMAN",t:"JONES",w:2},{s:"SPEARMAN",t:"FBI AGENT",w:1},
-  {s:"SPEARMAN",t:"KA 760 -",w:1},{s:"SPEARMAN",t:"JIMMY",w:1},{s:"SPEARMAN",t:"GUY WITH GUN",w:1},
-  {s:"SPEARMAN",t:"MAN",w:1},{s:"SPEARMAN",t:"TOSCA",w:1},{s:"SPEARMAN",t:"TRUPO",w:1},
-  {s:"RIVERA",t:"CLERK",w:1},{s:"RIVERA",t:"DISPATCHER",w:1},
-  {s:"CHARLIE",t:"BANKER",w:2},{s:"CHARLIE",t:"TOSCA",w:1},{s:"CHARLIE",t:"TANGO",w:1},
-  {s:"CHARLIE",t:"SINGER",w:1},{s:"CHARLIE",t:"SIBOTA",w:1},{s:"CHARLIE",t:"REPORTER ON TV",w:1},
-  {s:"CHARLIE",t:"PROFESSOR",w:1},{s:"CHARLIE",t:"JIMMY",w:1},{s:"CHARLIE",t:"DETECTIVE",w:1},
-  {s:"TOSCA",t:"BANKER",w:1},{s:"TOSCA",t:"JOE LOUIS",w:1},{s:"TOSCA",t:"MRS. TOSCA",w:1},
-  {s:"TOSCA",t:"PROFESSOR",w:1},{s:"TOSCA",t:"REPORTER ON TV",w:1},{s:"TOSCA",t:"TANGO",w:1},
-  {s:"TOSCA",t:"TRUPO",w:1},
-  {s:"JONES",t:"ABRUZZO",w:2},{s:"JONES",t:"JIMMY",w:1},{s:"JONES",t:"KA 760 -",w:1},
-  {s:"TRUPO",t:"SIU DET 1",w:1},{s:"TRUPO",t:"SIU DET. 1",w:1},{s:"TRUPO",t:"SIU DET. 2",w:1},
-  {s:"TANGO",t:"BANKER",w:1},{s:"TANGO",t:"PROFESSOR",w:1},{s:"TANGO",t:"REPORTER ON TV",w:1},
-  {s:"MRS. LUCAS",t:"CONTINUED:",w:1},
-  {s:"NATE",t:"COLONEL",w:1},{s:"NATE",t:"GENERAL",w:1},{s:"NATE",t:"THAI",w:1},
-  {s:"SHEILA",t:"BAILIFF",w:1},{s:"SHEILA",t:"SPEARMAN V/O PHONE",w:1},
-  {s:"REPORTER ON TV",t:"BANKER",w:1},{s:"REPORTER ON TV",t:"CONTINUED:",w:1},
-  {s:"REPORTER ON TV",t:"DETECTIVE",w:1},{s:"REPORTER ON TV",t:"PROFESSOR",w:1},
-  {s:"REPORTER ON TV",t:"REPORTER",w:1},{s:"REPORTER ON TV",t:"MEDICAL EXAMINER",w:1},
-  {s:"BANKER",t:"SIBOTA",w:1},{s:"BANKER",t:"DETECTIVE",w:1},{s:"BANKER",t:"JIMMY",w:1},
-  {s:"BANKER",t:"PROFESSOR",w:1},
-  {s:"ABRUZZO",t:"KA 760 -",w:1},{s:"ABRUZZO",t:"JIMMY",w:1},
-  {s:"BAILIFF",t:"LAURIE",w:1},
-  {s:"JIMMY",t:"KA 760 -",w:1},{s:"JIMMY",t:"DARYLYNN",w:1},{s:"JIMMY",t:"DETECTIVE",w:1},
-  {s:"JIMMY",t:"SIBOTA",w:1},
-  {s:"TONY",t:"VIDA",w:1},
-  {s:"GENERAL",t:"COLONEL",w:1},
-  {s:"SIBOTA",t:"DETECTIVE",w:1},
-  {s:"DETECTIVE",t:"MEDICAL EXAMINER",w:1},{s:"DETECTIVE",t:"REPORTER",w:1},
-  {s:"GANGSTA 2",t:"GANGSTA 1",w:1},
-  {s:"FBI AGENT",t:"MAN",w:1},
-  {s:"RED TOP",t:"SERVICEMAN 2",w:1},{s:"RED TOP",t:"SERVICEMAN 1",w:1},
-  {s:"SERVICEMAN 1",t:"SERVICEMAN 2",w:1},
-  {s:"MEDICAL EXAMINER",t:"REPORTER",w:1},
-  {s:"SIU DET. 2",t:"SIU DET 1",w:1},{s:"SIU DET. 2",t:"SIU DET. 1",w:1},
-  {s:"SIU DET. 1",t:"SIU DET 1",w:1}
+const rawEdges = [
+  {s:"FORREST",t:"JENNY",w:26},{s:"FORREST",t:"LT. DAN",w:17},{s:"FORREST",t:"MRS. GUMP",w:15},
+  {s:"FORREST",t:"BUBBA",w:6},{s:"FORREST",t:"CROWD",w:5},{s:"FORREST",t:"SGT. SIMS",w:5},
+  {s:"FORREST",t:"SONG",w:4},{s:"FORREST",t:"ELDERLY WOMAN",w:4},{s:"FORREST",t:"LOUISE",w:4},
+  {s:"FORREST",t:"FOOTBALL COACH",w:3},{s:"FORREST",t:"ANNOUNCER",w:3},{s:"FORREST",t:"FORREST JR.",w:3},
+  {s:"FORREST",t:"ANCHORMAN",w:3},{s:"FORREST",t:"NEWSCASTER",w:3},{s:"FORREST",t:"YOUNG MAN",w:2},
+  {s:"FORREST",t:"PRESIDENT NIXON",w:2},{s:"FORREST",t:"LENORE",w:2},{s:"FORREST",t:"DICK CLARK",w:2},
+  {s:"FORREST",t:"NEWSMAN",w:2},{s:"FORREST",t:"MRS. BLUE",w:2},{s:"FORREST",t:"OLD SHRIMPER",w:2},
+  {s:"FORREST",t:"CARLA",w:2},{s:"FORREST",t:"BUS STOP - PRESENT - DAY",w:2},{s:"FORREST",t:"OFFICER",w:2},
+  {s:"FORREST",t:"BLACK WOMAN",w:2},{s:"FORREST",t:"GIRL",w:2},{s:"FORREST",t:"SOLDIER",w:2},
+  {s:"FORREST",t:"MAN",w:2},{s:"FORREST",t:"WESLEY",w:2},{s:"FORREST",t:"ELVIS",w:2},
+  {s:"FORREST",t:"DOCTOR",w:2},{s:"FORREST",t:"BLACK PANTHER",w:1},{s:"FORREST",t:"S.D.S.",w:1},
+  {s:"FORREST",t:"RUBEN",w:1},{s:"FORREST",t:"MASAI",w:1},{s:"FORREST",t:"PRESIDENT JOHNSON",w:1},
+  {s:"FORREST",t:"NURSE",w:1},{s:"FORREST",t:"VET",w:1},{s:"FORREST",t:"POLICEMAN",w:1},
+  {s:"FORREST",t:"ISABEL",w:1},{s:"FORREST",t:"ABBIE HOFFMAN",w:1},{s:"FORREST",t:"HILARY",w:1},
+  {s:"FORREST",t:"SUSAN",w:1},{s:"FORREST",t:"MINISTER",w:1},{s:"FORREST",t:"BERT",w:1},
+  {s:"FORREST",t:"WILD-EYED MAN",w:1},{s:"FORREST",t:"AGING HIPPIE",w:1},{s:"FORREST",t:"REPORTER",w:1},
+  {s:"FORREST",t:"MAN WITH CANE",w:1},{s:"FORREST",t:"ELVIS PRESLEY",w:1},
+  {s:"FORREST",t:"SCHOOLD BUS DRIVER",w:1},{s:"FORREST",t:"PRINCIPAL",w:1},
+  {s:"FORREST",t:"BOB HOPE",w:1},{s:"FORREST",t:"JOHN LENNON",w:1},{s:"FORREST",t:"DICK CAVETT",w:1},
+  {s:"FORREST",t:"NEIL ARMSTRONG",w:1},{s:"FORREST",t:"YOUNG HIPPIE",w:1},
+  {s:"FORREST",t:"STRONGARM",w:1},{s:"FORREST",t:"DALLAS",w:1},{s:"FORREST",t:"MALE NURSE",w:1},
+  {s:"FORREST",t:"SOLDIER WITH BIG MACHINE GUN",w:1},{s:"FORREST",t:"DRIVER",w:1},
+  {s:"FORREST",t:"MEN",w:1},{s:"FORREST",t:"EMCEE",w:1},{s:"FORREST",t:"YOUNG PRIVATE",w:1},
+  {s:"FORREST",t:"NIGHT",w:1},{s:"FORREST",t:"FORREST & RECRUITS",w:1},{s:"FORREST",t:"CLEVELAND",w:1},
+  {s:"FORREST",t:"SIMS.",w:1},{s:"FORREST",t:"BUBBA AND FORREST",w:1},{s:"FORREST",t:"BUBBA & FORREST",w:1},
+  {s:"JENNY",t:"CROWD",w:2},{s:"JENNY",t:"WESLEY",w:2},{s:"JENNY",t:"RUBEN",w:1},
+  {s:"JENNY",t:"S.D.S.",w:1},{s:"JENNY",t:"POLICEMAN",w:1},{s:"JENNY",t:"MASAI",w:1},
+  {s:"JENNY",t:"VET",w:1},{s:"JENNY",t:"BLACK PANTHER",w:1},{s:"JENNY",t:"ISABEL",w:1},
+  {s:"JENNY",t:"HILARY",w:1},{s:"JENNY",t:"ABBIE HOFFMAN",w:1},{s:"JENNY",t:"MINISTER",w:1},
+  {s:"JENNY",t:"LT. DAN",w:1},{s:"JENNY",t:"LOUISE",w:1},{s:"JENNY",t:"NEWSMAN",w:1},
+  {s:"JENNY",t:"LITTLE BOY",w:1},{s:"JENNY",t:"SUSAN",w:1},{s:"JENNY",t:"NEWSCASTER",w:1},
+  {s:"JENNY",t:"YOUNG HIPPIE",w:1},{s:"JENNY",t:"CAB DRIVER",w:1},{s:"JENNY",t:"ANNOUNCER",w:1},
+  {s:"LT. DAN",t:"BUBBA",w:6},{s:"LT. DAN",t:"SGT. SIMS",w:5},{s:"LT. DAN",t:"SONG",w:4},
+  {s:"LT. DAN",t:"MAN",w:4},{s:"LT. DAN",t:"SOLDIER",w:3},{s:"LT. DAN",t:"STRONGARM",w:3},
+  {s:"LT. DAN",t:"SOLDIER WITH BIG MACHINE GUN",w:3},{s:"LT. DAN",t:"MALE NURSE",w:3},
+  {s:"LT. DAN",t:"SIMS.",w:2},{s:"LT. DAN",t:"BUBBA AND FORREST",w:2},{s:"LT. DAN",t:"BUBBA & FORREST",w:2},
+  {s:"MRS. GUMP",t:"PRINCIPAL",w:2},{s:"MRS. GUMP",t:"DOCTOR",w:2},{s:"MRS. GUMP",t:"NURSE",w:1},
+  {s:"MRS. GUMP",t:"PRESIDENT KENNEDY",w:1},{s:"MRS. GUMP",t:"BUS DRIVER",w:1},
+  {s:"MRS. GUMP",t:"MAN WITH CANE",w:1},{s:"MRS. GUMP",t:"ELVIS PRESLEY",w:1},
+  {s:"MRS. GUMP",t:"REVEREND",w:1},{s:"MRS. GUMP",t:"LENORE",w:1},{s:"MRS. GUMP",t:"MARGO",w:1},
+  {s:"MRS. GUMP",t:"FORREST'S BOAT - DAY",w:1},{s:"MRS. GUMP",t:"PRESENT - BUS STOP",w:1},
+  {s:"JENNY",t:"FORREST JR.",w:2},{s:"JENNY",t:"LITTLE BOY",w:1},
+  {s:"FORREST JR.",t:"LITTLE BOY",w:1},{s:"FORREST JR.",t:"LYNN MARIE",w:1},
+  {s:"FORREST JR.",t:"BERT",w:1},{s:"FORREST JR.",t:"ERNIE",w:1},
+  {s:"LITTLE BOY",t:"LYNN MARIE",w:1},{s:"LITTLE BOY",t:"ERNIE",w:1},{s:"LITTLE BOY",t:"BERT",w:1},
+  {s:"LYNN MARIE",t:"ERNIE",w:1},{s:"LYNN MARIE",t:"BERT",w:1},{s:"BERT",t:"ERNIE",w:1},
+  {s:"MAN WITH CANE",t:"ELVIS PRESLEY",w:1},{s:"JOHN LENNON",t:"DICK CAVETT",w:1},
+  {s:"DEAN",t:"MILITARY RECRUITER",w:1},
+  {s:"BLACK AND WHITE PARAMOUNT NEWSREEL - DAY",t:"BLACK AND WHITE NEWSREEL",w:1},
+  {s:"WHITE WOMAN",t:"BILLY",w:1},
+  {s:"DRILL SERGEANT",t:"FORREST & RECRUITS",w:1},{s:"DRILL SERGEANT",t:"YOUNG PRIVATE",w:1},
+  {s:"CHET HUNTLEY",t:"ASSISTANT COACH",w:1},{s:"CHET HUNTLEY",t:"GOVERNOR WALLACE",w:1},
+  {s:"GOVERNOR WALLACE",t:"BLACK AND WHITE FOOTAGE",w:1},
+  {s:"EARL",t:"KATZENBACH",w:1},{s:"HIGH SCHOOL COACH",t:"OLDER BOY",w:1},
+  {s:"BUS STATION - DAY",t:"DALLAS",w:1},{s:"MEN",t:"EMCEE",w:1},
+  {s:"SIMS.",t:"BUBBA AND FORREST",w:1},{s:"SIMS.",t:"BUBBA & FORREST",w:1},
+  {s:"BUBBA AND FORREST",t:"BUBBA & FORREST",w:1},
+  {s:"MINISTER",t:"SUSAN",w:1},{s:"MINISTER",t:"FORREST",w:1},
+  {s:"NEWSMAN",t:"FORREST",w:2},{s:"REPORTER",t:"FORREST",w:1},
+  {s:"ANCHORMAN",t:"PRESIDENT JOHNSON",w:1},{s:"ANCHORMAN",t:"PRESENT - BUS STOP",w:1},
+  {s:"FORREST'S BOAT - DAY",t:"DEAN",w:1},{s:"FORREST'S BOAT - DAY",t:"BUS DRIVER",w:1},
 ];
 
-/* =====================================================================
-   METRICS COMPUTATION
-   ===================================================================== */
-const COM_COLORS = {0:"#d64040", 1:"#d4af37", 2:"#4ba3b5", 3:"#af66cc"};
-const COM_NAMES  = {
-  0:"SIU / Otoczenie Richiego",
-  1:"Imperium Franka Lucasa",
-  2:"Neutralni / Media / Prawo",
-  3:"Prokuratura / Spearman"
+// Add DRILL SERGEANT node
+rawNodes.push({id:"DRILL SERGEANT",mod:2,bc:0.002,label:"DRILL SGT."});
+
+// ══════════════════════════════════════════════════════════
+//  COMMUNITY COLORS  (warm palette inspired by Forrest Gump)
+// ══════════════════════════════════════════════════════════
+const communityColors = {
+  0: "#e8955a",   // sunset orange — Alabama / Gump family
+  1: "#b8d4e8",   // sky blue — Jenny & counterculture
+  2: "#6b9e5e",   // meadow green — Vietnam / military
+  3: "#d4a96a",   // bench wood — media & narrators
+  4: "#a07bbd",   // soft violet — Forrest Jr. & school
+  5: "#c45a5a",   // warm red — radical groups
+};
+const communityNames = {
+  0: "Alabama & Rodzina Gump",
+  1: "Jenny & Kontrkultūra",
+  2: "Wietnam & Wojsko",
+  3: "Media & Narratorzy",
+  4: "Forrest Jr. & Szkoła",
+  5: "Ruchy Radykalne",
 };
 
-// Build adjacency
-const nodeMap = {};
-RAW_NODES.forEach(n => { nodeMap[n.id] = {...n}; });
-
-const adj = {};    // id -> [{neighbor, weight}]
-const degW = {};   // weighted degree
-RAW_NODES.forEach(n => { adj[n.id] = []; degW[n.id] = 0; });
-
-RAW_EDGES.forEach(e => {
-  adj[e.s].push({neighbor:e.t, weight:e.w});
-  adj[e.t].push({neighbor:e.s, weight:e.w});
-  degW[e.s] += e.w;
-  degW[e.t] += e.w;
+// ══════════════════════════════════════════════════════════
+//  METRICS
+// ══════════════════════════════════════════════════════════
+// build adjacency for degree
+const degreeMap = {};
+rawNodes.forEach(n => degreeMap[n.id] = 0);
+rawEdges.forEach(e => {
+  if (degreeMap[e.s] !== undefined) degreeMap[e.s] += e.w;
+  if (degreeMap[e.t] !== undefined) degreeMap[e.t] += e.w;
 });
 
-// Closeness (BFS on unweighted graph)
-function computeCloseness() {
-  const cl = {};
-  const ids = RAW_NODES.map(n => n.id);
-  ids.forEach(src => {
-    const dist = {[src]:0};
-    const q = [src];
-    let sumDist = 0, reachable = 0;
-    while (q.length) {
-      const cur = q.shift();
-      adj[cur].forEach(({neighbor}) => {
-        if (!(neighbor in dist)) {
-          dist[neighbor] = dist[cur] + 1;
-          sumDist += dist[neighbor];
-          reachable++;
-          q.push(neighbor);
-        }
+// simple closeness (1 / avg_path approximated via BFS)
+function computeCloseness(nodes, edges) {
+  const adj = {};
+  nodes.forEach(n => adj[n.id] = []);
+  edges.forEach(e => {
+    if (adj[e.s]) adj[e.s].push(e.t);
+    if (adj[e.t]) adj[e.t].push(e.s);
+  });
+  const result = {};
+  nodes.forEach(src => {
+    const visited = {[src.id]: 0};
+    const queue = [src.id];
+    while (queue.length) {
+      const cur = queue.shift();
+      (adj[cur] || []).forEach(nb => {
+        if (!(nb in visited)) { visited[nb] = visited[cur] + 1; queue.push(nb); }
       });
     }
-    cl[src] = reachable > 0 ? reachable / sumDist : 0;
+    const total = Object.values(visited).reduce((a,b)=>a+b,0);
+    result[src.id] = total > 0 ? (Object.keys(visited).length - 1) / total : 0;
   });
-  return cl;
+  return result;
 }
 
-// PageRank
-function computePageRank(iter=60, d=0.85) {
-  const n = RAW_NODES.length;
+// pagerank simple iteration
+function computePageRank(nodes, edges, iter=30, d=0.85) {
+  const N = nodes.length;
   const pr = {};
-  const out = {};
-  RAW_NODES.forEach(nd => { pr[nd.id] = 1/n; out[nd.id] = adj[nd.id].length || 1; });
-  for (let i=0; i<iter; i++) {
-    const np = {};
-    RAW_NODES.forEach(nd => {
-      let s = 0;
-      adj[nd.id].forEach(({neighbor}) => { s += pr[neighbor] / out[neighbor]; });
-      np[nd.id] = (1-d)/n + d*s;
+  const outSum = {};
+  nodes.forEach(n => { pr[n.id] = 1/N; outSum[n.id] = 0; });
+  edges.forEach(e => { outSum[e.s] = (outSum[e.s]||0) + e.w; outSum[e.t] = (outSum[e.t]||0) + e.w; });
+  for (let i = 0; i < iter; i++) {
+    const newPr = {};
+    nodes.forEach(n => newPr[n.id] = (1-d)/N);
+    edges.forEach(e => {
+      if (outSum[e.s]) newPr[e.t] = (newPr[e.t]||0) + d * pr[e.s] * (e.w / outSum[e.s]);
+      if (outSum[e.t]) newPr[e.s] = (newPr[e.s]||0) + d * pr[e.t] * (e.w / outSum[e.t]);
     });
-    Object.assign(pr, np);
+    Object.assign(pr, newPr);
   }
   return pr;
 }
 
-const closeness = computeCloseness();
-const pagerank  = computePageRank();
+const closenessMap = computeCloseness(rawNodes, rawEdges);
+const pageRankMap = computePageRank(rawNodes, rawEdges);
 
-// Assign to nodes
-RAW_NODES.forEach(n => {
-  n.degree      = degW[n.id];
-  n.closeness   = closeness[n.id];
-  n.pagerank    = pagerank[n.id];
+rawNodes.forEach(n => {
+  n.degree = degreeMap[n.id] || 0;
+  n.betweenness = n.bc;
+  n.closeness = closenessMap[n.id] || 0;
+  n.pagerank = pageRankMap[n.id] || 0;
+  n.color = communityColors[n.mod] || "#888";
 });
 
-/* =====================================================================
-   D3 GRAPH
-   ===================================================================== */
-const container  = document.getElementById('graph-panel');
-const svgEl      = document.getElementById('graph-svg');
+// ══════════════════════════════════════════════════════════
+//  D3 SETUP
+// ══════════════════════════════════════════════════════════
+let activeMode = "degree";
+
+const svg = d3.select("#graph-svg");
+const container = document.querySelector(".graph-area");
 
 function getSize() {
-  return {w: container.clientWidth, h: container.clientHeight};
+  return { w: container.clientWidth, h: container.clientHeight };
 }
 
-// Funkcja wyliczająca docelowy punkt (ognisko grawitacji) dla danej społeczności
-function getFocalPoint(com, width, height) {
-  const r = Math.min(width, height) * 0.28; // Promień rozstawienia klastrów
-  const angles = [
-    -Math.PI / 4,       // Com 0: Prawy-Górny róg
-    Math.PI / 4,        // Com 1: Prawy-Dolny róg
-    Math.PI * 3 / 4,    // Com 2: Lewy-Dolny róg
-    -Math.PI * 3 / 4    // Com 3: Lewy-Górny róg
-  ];
-  const angle = angles[com % 4];
-  return {
-    x: width / 2 + r * Math.cos(angle),
-    y: height / 2 + r * Math.sin(angle)
-  };
-}
+const g = svg.append("g").attr("class","graph-root");
 
-const svg = d3.select('#graph-svg');
-const g = svg.append('g');
-
-// ── Nodes and links data ──
-const nodes = RAW_NODES.map(n => ({...n}));
-const links = RAW_EDGES.map(e => ({source:e.s, target:e.t, weight:e.w}));
-
-// Weight extent for edge styling
-const wExtent = d3.extent(links, d => d.weight);
-const strokeW = d3.scaleLinear().domain(wExtent).range([1.5, 4]);
-const strokeO = d3.scaleLinear().domain(wExtent).range([0.3, 0.8]);
-
-// ── Active metric ──
-let activeMetric = 'degree';
-let selectedNode = null;
-
-function getMetricVal(n) {
-  if (activeMetric === 'degree')      return n.degree;
-  if (activeMetric === 'betweenness') return n.betweenness;
-  if (activeMetric === 'closeness')   return n.closeness;
-  if (activeMetric === 'pagerank')    return n.pagerank;
-}
-
-function getNodeRadius(n) {
-  const val = getMetricVal(n);
-  const allVals = nodes.map(getMetricVal);
-  const [mn, mx] = d3.extent(allVals);
-  const t = mx > mn ? (val - mn) / (mx - mn) : 0.5;
-  const boost = (n.id === 'RICHIE' || n.id === 'FRANK') ? 1.2 : 1;
-  return (6 + t * 24) * boost;
-}
-
-function getFontSize(r) { return Math.max(8, Math.min(14, r * 0.9)); }
-
-// ── Force simulation ──
-let {w, h} = getSize();
-
-const simulation = d3.forceSimulation(nodes)
-  .force('link', d3.forceLink(links).id(d => d.id)
-    .distance(d => 60 + 100 / (d.weight || 1)) // Zmniejszony dystans linków (wcześniej 80 + 150)
-    .strength(d => Math.min(1, d.weight / 15))
-  )
-  .force('charge', d3.forceManyBody().strength(-300).distanceMax(600)) // Słabsze odpychanie by zachować spójność (wcześniej -450)
-  .force('center', d3.forceCenter(w/2, h/2))
-  // MODYFIKACJA: Dodane siły X i Y grupujące społeczności
-  .force('x', d3.forceX(d => getFocalPoint(d.community, w, h).x).strength(0.12))
-  .force('y', d3.forceY(d => getFocalPoint(d.community, w, h).y).strength(0.12))
-  .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) + 15)) // Mniejszy promień kolizji (wcześniej 20)
-  .alphaDecay(0.02)
-  .velocityDecay(0.4);
-
-// ── Draw links ──
-const linkSel = g.append('g').attr('class','links')
-  .selectAll('line')
-  .data(links)
-  .join('line')
-    .attr('class','link')
-    .attr('stroke', '#666')
-    .attr('stroke-width', d => strokeW(d.weight))
-    .attr('stroke-opacity', d => strokeO(d.weight));
-
-// ── Draw nodes ──
-const nodeG = g.append('g').attr('class','nodes')
-  .selectAll('g')
-  .data(nodes)
-  .join('g')
-    .attr('class','node')
-    .call(d3.drag()
-      .on('start', dragStart)
-      .on('drag',  dragged)
-      .on('end',   dragEnd)
-    );
-
-nodeG.append('circle')
-  .attr('r', d => getNodeRadius(d))
-  .attr('fill', d => COM_COLORS[d.community])
-  .attr('stroke', '#121212')
-  .attr('stroke-width', 2);
-
-nodeG.append('text')
-  .attr('class','lbl')
-  .attr('dy', d => getNodeRadius(d) + getFontSize(getNodeRadius(d)) + 4)
-  .attr('text-anchor','middle')
-  .attr('font-size', d => getFontSize(getNodeRadius(d)))
-  .attr('fill', d => COM_COLORS[d.community])
-  .attr('stroke', '#000')
-  .attr('stroke-width', 4)
-  .text(d => d.id);
-
-// ── Zoom ──
 const zoom = d3.zoom()
-  .scaleExtent([0.2, 3])
-  .on('zoom', e => g.attr('transform', e.transform));
-
+  .scaleExtent([0.2, 4])
+  .on("zoom", e => g.attr("transform", e.transform));
 svg.call(zoom);
 
-// ── Tick ──
-simulation.on('tick', () => {
-  linkSel
-    .attr('x1', d => d.source.x)
-    .attr('y1', d => d.source.y)
-    .attr('x2', d => d.target.x)
-    .attr('y2', d => d.target.y);
+// link force distance
+const maxW = Math.max(...rawEdges.map(e=>e.w));
 
-  nodeG.attr('transform', d => `translate(${d.x},${d.y})`);
+const simulation = d3.forceSimulation(rawNodes)
+  .force("link", d3.forceLink(rawEdges.map(e=>({...e,source:e.s,target:e.t})))
+    .id(d=>d.id)
+    .distance(d => 80 + 120 / (d.w||1))
+    .strength(d => Math.min(0.8, 0.1 * d.w))
+  )
+  .force("charge", d3.forceManyBody().strength(-320))
+  .force("center", d3.forceCenter(0, 0))
+  .force("collision", d3.forceCollide().radius(d => nodeRadius(d) + 6))
+  .alphaDecay(0.025);
+
+// Build links array with source/target as IDs
+const linkData = rawEdges.map(e => ({source: e.s, target: e.t, w: e.w}));
+
+const wScale = d3.scaleLinear().domain([1, maxW]).range([0.5, 4]);
+const opacScale = d3.scaleLinear().domain([1, maxW]).range([0.15, 0.75]);
+
+const linkSel = g.append("g").attr("class","links")
+  .selectAll("line")
+  .data(linkData)
+  .join("line")
+  .attr("stroke", "#c4732a")
+  .attr("stroke-width", d => wScale(d.w))
+  .attr("stroke-opacity", d => opacScale(d.w));
+
+// radius by metric
+function nodeRadius(d) {
+  const modeMap = {degree:"degree", betweenness:"betweenness", closeness:"closeness", pagerank:"pagerank"};
+  const key = modeMap[activeMode];
+  const vals = rawNodes.map(n => n[key]);
+  const mn = Math.min(...vals), mx = Math.max(...vals);
+  const norm = mx > mn ? (d[key] - mn) / (mx - mn) : 0.5;
+  return 5 + norm * 22;
+}
+
+const nodeGroup = g.append("g").attr("class","nodes")
+  .selectAll("g")
+  .data(rawNodes)
+  .join("g")
+  .attr("class","node-g")
+  .call(d3.drag()
+    .on("start", dragStart)
+    .on("drag", dragged)
+    .on("end", dragEnd)
+  )
+  .on("mouseover", showTooltip)
+  .on("mousemove", moveTooltip)
+  .on("mouseout", hideTooltip)
+  .on("click", onNodeClick);
+
+const circles = nodeGroup.append("circle")
+  .attr("r", d => nodeRadius(d))
+  .attr("fill", d => d.color)
+  .attr("stroke", "rgba(255,255,255,0.15)")
+  .attr("stroke-width", 1)
+  .attr("filter", "url(#nodeGlow)");
+
+// Add glow filter to SVG defs
+const defs = svg.append("defs");
+const filter = defs.append("filter").attr("id","nodeGlow").attr("x","-40%").attr("y","-40%").attr("width","180%").attr("height","180%");
+filter.append("feGaussianBlur").attr("stdDeviation","2.5").attr("result","blur");
+const feMerge = filter.append("feMerge");
+feMerge.append("feMergeNode").attr("in","blur");
+feMerge.append("feMergeNode").attr("in","SourceGraphic");
+
+const labels = nodeGroup.append("text")
+  .attr("class", d => nodeRadius(d) > 14 ? "node-label large" : "node-label")
+  .text(d => d.label)
+  .attr("dy", d => nodeRadius(d) + 9);
+
+simulation.on("tick", () => {
+  linkSel
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+  nodeGroup.attr("transform", d => `translate(${d.x},${d.y})`);
 });
+
+// Initial zoom fit after sim settles
+simulation.on("end", () => {
+  const {w, h} = getSize();
+  const xs = rawNodes.map(n=>n.x), ys = rawNodes.map(n=>n.y);
+  const x0=Math.min(...xs)-60, x1=Math.max(...xs)+60;
+  const y0=Math.min(...ys)-60, y1=Math.max(...ys)+60;
+  const scale = Math.min(w/(x1-x0), h/(y1-y0), 1.4) * 0.85;
+  const tx = w/2 - scale*(x0+x1)/2;
+  const ty = h/2 - scale*(y0+y1)/2;
+  svg.transition().duration(1200)
+    .call(zoom.transform, d3.zoomIdentity.translate(tx,ty).scale(scale));
+});
+
+// ── Mode controls ──
+document.querySelectorAll(".ctrl-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeMode = btn.dataset.mode;
+    document.querySelectorAll(".ctrl-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    circles.transition().duration(450)
+      .attr("r", d => nodeRadius(d));
+    labels
+      .attr("class", d => nodeRadius(d) > 14 ? "node-label large" : "node-label")
+      .attr("dy", d => nodeRadius(d) + 9);
+    // update ranking
+    renderRanking(activeRankTab);
+  });
+});
+
+// ── Click node ──
+let selectedNode = null;
+function onNodeClick(event, d) {
+  event.stopPropagation();
+  if (selectedNode === d.id) {
+    selectedNode = null;
+    resetHighlight();
+    showEmptyCard();
+    return;
+  }
+  selectedNode = d.id;
+  highlightNode(d);
+  showNodeCard(d);
+}
+svg.on("click", () => { selectedNode = null; resetHighlight(); showEmptyCard(); });
+
+function highlightNode(d) {
+  const neighborIds = new Set([d.id]);
+  linkData.forEach(e => {
+    if (e.source.id === d.id || e.source === d.id) neighborIds.add(e.target.id || e.target);
+    if (e.target.id === d.id || e.target === d.id) neighborIds.add(e.source.id || e.source);
+  });
+  nodeGroup.attr("opacity", n => neighborIds.has(n.id) ? 1 : 0.07);
+  circles.attr("stroke", n => n.id === d.id ? "#f5f0e8" : "rgba(255,255,255,0.15)")
+    .attr("stroke-width", n => n.id === d.id ? 2.5 : 1);
+  linkSel.attr("stroke-opacity", e => {
+    const sid = e.source.id || e.source, tid = e.target.id || e.target;
+    return (sid === d.id || tid === d.id) ? 0.9 : 0.02;
+  });
+}
+function resetHighlight() {
+  nodeGroup.attr("opacity", 1);
+  circles.attr("stroke","rgba(255,255,255,0.15)").attr("stroke-width",1);
+  linkSel.attr("stroke-opacity", e => opacScale(e.w));
+}
+
+// ── Node card ──
+function showEmptyCard() {
+  const card = document.getElementById("node-card");
+  card.className = "node-card empty";
+  card.innerHTML = "<p>Kliknij postać<br>aby zobaczyć szczegóły</p>";
+}
+function showNodeCard(d) {
+  const card = document.getElementById("node-card");
+  card.className = "node-card";
+  const comm = communityNames[d.mod] || `Społeczność ${d.mod}`;
+  card.innerHTML = `
+    <h3>${d.label}</h3>
+    <span class="community-badge" style="background:${d.color}22;color:${d.color};border:1px solid ${d.color}44">${comm}</span>
+    <div class="metrics-grid">
+      <div class="metric-item">
+        <div class="metric-label">Stopień (waga)</div>
+        <div class="metric-value">${d.degree}</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">Pośrednictwo</div>
+        <div class="metric-value">${d.betweenness.toFixed(4)}</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">Bliskość</div>
+        <div class="metric-value">${d.closeness.toFixed(3)}</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">PageRank</div>
+        <div class="metric-value">${d.pagerank.toFixed(4)}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Tooltip ──
+const tooltip = document.getElementById("tooltip");
+function showTooltip(event, d) {
+  tooltip.style.display = "block";
+  tooltip.innerHTML = `
+    <strong>${d.label}</strong>
+    <div class="tt-row"><span class="tt-label">Stopień</span><span class="tt-val">${d.degree}</span></div>
+    <div class="tt-row"><span class="tt-label">Pośrednictwo</span><span class="tt-val">${d.betweenness.toFixed(4)}</span></div>
+    <div class="tt-row"><span class="tt-label">PageRank</span><span class="tt-val">${d.pagerank.toFixed(4)}</span></div>
+  `;
+}
+function moveTooltip(event) {
+  const x = event.clientX, y = event.clientY;
+  tooltip.style.left = (x + 14) + "px";
+  tooltip.style.top = (y - 10) + "px";
+  if (x + 240 > window.innerWidth) tooltip.style.left = (x - 230) + "px";
+}
+function hideTooltip() { tooltip.style.display = "none"; }
 
 // ── Drag ──
 function dragStart(event, d) {
@@ -810,254 +1232,71 @@ function dragEnd(event, d) {
   d.fx = null; d.fy = null;
 }
 
-// ── Click highlight ──
-const neighborSet = {};
-nodes.forEach(n => { neighborSet[n.id] = new Set([n.id]); });
-links.forEach(l => {
-  const s = l.source.id || l.source;
-  const t = l.target.id || l.target;
-  neighborSet[s].add(t);
-  neighborSet[t].add(s);
+// ══════════════════════════════════════════════════════════
+//  COMMUNITY LEGEND
+// ══════════════════════════════════════════════════════════
+const legendList = document.getElementById("legend-list");
+Object.entries(communityNames).forEach(([k,name]) => {
+  const div = document.createElement("div");
+  div.className = "legend-item";
+  div.innerHTML = `<span class="legend-dot" style="background:${communityColors[k]}"></span><span>${name}</span>`;
+  legendList.appendChild(div);
 });
 
-function highlightNode(d) {
-  selectedNode = d;
-  const nb = neighborSet[d.id];
+// ══════════════════════════════════════════════════════════
+//  RANKING
+// ══════════════════════════════════════════════════════════
+let activeRankTab = "degree";
+const rankMetrics = {degree:"degree", betweenness:"betweenness", closeness:"closeness", pagerank:"pagerank"};
 
-  nodeG.selectAll('circle')
-    .attr('opacity', nd => nb.has(nd.id) ? 1 : 0.15);
-  nodeG.selectAll('text')
-    .attr('opacity', nd => nb.has(nd.id) ? 1 : 0.1);
-  linkSel
-    .attr('stroke-opacity', l => {
-      const s = l.source.id || l.source;
-      const t = l.target.id || l.target;
-      return (s === d.id || t === d.id) ? Math.max(strokeO(l.weight), 0.8) : 0.05;
-    })
-    .attr('stroke', l => {
-      const s = l.source.id || l.source;
-      const t = l.target.id || l.target;
-      return (s === d.id || t === d.id) ? COM_COLORS[d.community] : '#666';
-    });
-
-  // Highlight selected node border
-  nodeG.selectAll('circle')
-    .attr('stroke', nd => nd.id === d.id ? '#fff' : '#121212')
-    .attr('stroke-width', nd => nd.id === d.id ? 3 : 2);
-
-  showCard(d);
-  updateRankSelected(d.id);
-}
-
-function resetHighlight() {
-  selectedNode = null;
-  nodeG.selectAll('circle')
-    .attr('opacity', 1)
-    .attr('stroke', '#121212')
-    .attr('stroke-width', 2);
-  nodeG.selectAll('text').attr('opacity', 1);
-  linkSel
-    .attr('stroke-opacity', d => strokeO(d.weight))
-    .attr('stroke', '#666');
-  hideCard();
-  updateRankSelected(null);
-}
-
-nodeG.on('click', (event, d) => {
-  event.stopPropagation();
-  if (selectedNode && selectedNode.id === d.id) resetHighlight();
-  else highlightNode(d);
-});
-
-svg.on('click', () => resetHighlight());
-
-// ── Tooltip ──
-const tooltip = document.getElementById('tooltip');
-const ttName  = document.getElementById('tt-name');
-const ttRows  = document.getElementById('tt-rows');
-
-nodeG.on('mouseenter', (event, d) => {
-  ttName.textContent = d.id;
-  ttName.style.color = COM_COLORS[d.community];
-  const rows = [
-    ['Stopień', d.degree],
-    ['Pośrednictwo', d.betweenness.toFixed(4)],
-    ['Bliskość', d.closeness.toFixed(4)],
-    ['PageRank', d.pagerank.toFixed(4)]
-  ];
-  ttRows.innerHTML = rows.map(([l,v]) =>
-    `<div class="tt-row">${l}: <span class="tt-val">${v}</span></div>`
-  ).join('');
-  tooltip.style.display = 'block';
-});
-
-nodeG.on('mousemove', event => {
-  let x = event.clientX + 16, y = event.clientY + 16;
-  if (x + 240 > window.innerWidth) x = event.clientX - 260;
-  tooltip.style.left = x + 'px';
-  tooltip.style.top  = y + 'px';
-});
-
-nodeG.on('mouseleave', () => { tooltip.style.display = 'none'; });
-
-// ── Node Card ──
-function showCard(d) {
-  document.getElementById('card-empty').style.display = 'none';
-  document.getElementById('card-content').style.display = 'block';
-  document.getElementById('card-bar').style.background = COM_COLORS[d.community];
-  document.getElementById('card-name').textContent = d.id;
-  document.getElementById('card-name').style.color = COM_COLORS[d.community];
-
-  const metrics = [
-    {label:'Stopień',      val: d.degree},
-    {label:'Pośrednictwo', val: d.betweenness.toFixed(4)},
-    {label:'Bliskość',     val: d.closeness.toFixed(4)},
-    {label:'PageRank',     val: d.pagerank.toFixed(4)},
-    {label:'Społeczność',  val: COM_NAMES[d.community].split('/')[0].trim()}
-  ];
-  document.getElementById('card-metrics').innerHTML = metrics.map(m =>
-    `<div class="metric-box">
-      <div class="metric-box-label">${m.label}</div>
-      <div class="metric-box-val">${m.val}</div>
-    </div>`
-  ).join('');
-
-  const nb = adj[d.id]
-    .sort((a,b) => b.weight - a.weight)
-    .slice(0,5)
-    .map(x => `<span>${x.neighbor}</span> (${x.weight})`);
-  document.getElementById('card-neighbors').innerHTML =
-    `<span style="color:var(--text-dim);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase">Powiązania: </span>` + nb.join(' · ');
-}
-
-function hideCard() {
-  document.getElementById('card-empty').style.display = 'flex';
-  document.getElementById('card-content').style.display = 'none';
-}
-
-// ── Legend ──
-const legendEl = document.getElementById('legend-items');
-const comCounts = {};
-RAW_NODES.forEach(n => { comCounts[n.community] = (comCounts[n.community]||0)+1; });
-
-Object.entries(COM_NAMES).forEach(([com, name]) => {
-  const d = document.createElement('div');
-  d.className = 'legend-item';
-  d.innerHTML = `<div class="leg-dot" style="background:${COM_COLORS[com]}"></div>
-    <span class="leg-name">${name}</span>
-    <span class="leg-cnt">${comCounts[com]} postaci</span>`;
-  legendEl.appendChild(d);
-});
-
-// ── Ranking Panel ──
-let activeTab = 'degree';
-
-function renderRanking() {
-  const list = document.getElementById('rank-list');
-  const metric = activeTab;
-  const sorted = [...nodes].sort((a,b) => {
-    if (metric === 'degree')      return b.degree      - a.degree;
-    if (metric === 'betweenness') return b.betweenness - a.betweenness;
-    if (metric === 'closeness')   return b.closeness   - a.closeness;
-    if (metric === 'pagerank')    return b.pagerank     - a.pagerank;
-  });
-  const maxVal = metric === 'degree'      ? sorted[0].degree
-               : metric === 'betweenness' ? sorted[0].betweenness
-               : metric === 'closeness'   ? sorted[0].closeness
-               :                            sorted[0].pagerank;
-
-  list.innerHTML = sorted.map((n, i) => {
-    const val = metric === 'degree'      ? n.degree
-              : metric === 'betweenness' ? n.betweenness
-              : metric === 'closeness'   ? n.closeness
-              :                            n.pagerank;
-    const pct = maxVal > 0 ? (val / maxVal * 100) : 0;
-    const sel = selectedNode && selectedNode.id === n.id ? 'selected' : '';
-    const display = metric === 'degree' ? val : val.toFixed(3);
-    return `<div class="rank-item ${sel}" data-id="${n.id}">
-      <span class="ri-num">${i+1}</span>
-      <span class="ri-dot" style="background:${COM_COLORS[n.community]}"></span>
-      <span class="ri-name">${n.id}</span>
-      <div class="ri-bar-wrap"><div class="ri-bar" style="width:${pct}%;background:${COM_COLORS[n.community]}"></div></div>
-      <span class="ri-val">${display}</span>
-    </div>`;
-  }).join('');
-
-  list.querySelectorAll('.rank-item').forEach(el => {
-    el.addEventListener('click', () => {
-      const nd = nodes.find(n => n.id === el.dataset.id);
-      if (nd) {
-        if (selectedNode && selectedNode.id === nd.id) resetHighlight();
-        else highlightNode(nd);
+function renderRanking(metric) {
+  const list = document.getElementById("ranking-list");
+  const key = rankMetrics[metric];
+  const sorted = [...rawNodes].sort((a,b) => b[key] - a[key]).slice(0, 30);
+  const maxVal = sorted[0][key] || 1;
+  list.innerHTML = "";
+  sorted.forEach((d, i) => {
+    const div = document.createElement("div");
+    div.className = "rank-item";
+    const pct = Math.max(4, (d[key] / maxVal) * 100);
+    div.innerHTML = `
+      <span class="rank-num">${i+1}</span>
+      <span class="rank-dot" style="background:${d.color}"></span>
+      <span class="rank-name" title="${d.label}">${d.label}</span>
+      <span class="rank-bar-wrap"><span class="rank-bar" style="width:${pct}%;background:${d.color}"></span></span>
+    `;
+    div.addEventListener("click", () => {
+      const node = rawNodes.find(n => n.id === d.id);
+      if (node) {
+        selectedNode = node.id;
+        highlightNode(node);
+        showNodeCard(node);
+        // pan to node
+        const {w,h} = getSize();
+        svg.transition().duration(600)
+          .call(zoom.transform, d3.zoomIdentity
+            .translate(w/2 - node.x, h/2 - node.y)
+            .scale(1.5));
       }
     });
+    list.appendChild(div);
   });
 }
+renderRanking("degree");
 
-function updateRankSelected(id) {
-  document.querySelectorAll('.rank-item').forEach(el => {
-    el.classList.toggle('selected', el.dataset.id === id);
-  });
-}
-
-// Tab buttons
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeTab = btn.dataset.tab;
-    renderRanking();
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeRankTab = btn.dataset.rank;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderRanking(activeRankTab);
   });
 });
 
-// Ctrl buttons
-document.querySelectorAll('.ctrl-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeMetric = btn.dataset.metric;
-    updateNodeSizes();
-  });
-});
-
-function updateNodeSizes() {
-  nodeG.selectAll('circle')
-    .transition().duration(500)
-    .attr('r', d => getNodeRadius(d));
-  nodeG.selectAll('text')
-    .transition().duration(500)
-    .attr('dy', d => getNodeRadius(d) + getFontSize(getNodeRadius(d)) + 4)
-    .attr('font-size', d => getFontSize(getNodeRadius(d)));
-  simulation.force('collision').radius(d => getNodeRadius(d) + 15);
-  simulation.alpha(0.2).restart();
-}
-
-// Resize
-window.addEventListener('resize', () => {
-  const s = getSize();
-  w = s.w; h = s.h;
-  simulation.force('center', d3.forceCenter(w/2, h/2));
-  // Modyfikacja przy resize okna - upewniamy się, że siły grawitacyjne dostosują się do nowych wymiarów
-  simulation.force('x', d3.forceX(d => getFocalPoint(d.community, w, h).x).strength(0.12));
-  simulation.force('y', d3.forceY(d => getFocalPoint(d.community, w, h).y).strength(0.12));
-  simulation.alpha(0.1).restart();
-});
-
-// Initial render
-renderRanking();
-
-// Fit graph after sim settles
-simulation.on('end', () => {
-  const xs = nodes.map(n => n.x), ys = nodes.map(n => n.y);
-  const x0 = Math.min(...xs)-40, y0 = Math.min(...ys)-40;
-  const x1 = Math.max(...xs)+40, y1 = Math.max(...ys)+40;
-  const gw = x1-x0, gh = y1-y0;
-  const {w:sw, h:sh} = getSize();
-  const scale = Math.min(sw/gw, sh/gh, 1) * 0.85;
-  const tx = sw/2 - (x0+gw/2)*scale;
-  const ty = sh/2 - (y0+gh/2)*scale;
-  svg.transition().duration(1000)
-    .call(zoom.transform, d3.zoomIdentity.translate(tx,ty).scale(scale));
+// ── Resize ──
+window.addEventListener("resize", () => {
+  const {w,h} = getSize();
+  simulation.force("center", d3.forceCenter(0,0));
 });
 </script>
 </body>
